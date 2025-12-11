@@ -8,26 +8,27 @@ interface IModal {
 export class Modal extends Component<IModal> {
   protected closeButton: HTMLButtonElement;
   protected contentElement: HTMLElement;
+  
+  // Обработчик в виде стрелочного метода, чтобы не терять контекст `this`
+  private handleEscape = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      this.events.emit('modal:request-close');
+    }
+  };
 
-  constructor(events: IEvents, container: HTMLElement) {
+  constructor(private events: IEvents, container: HTMLElement) {
     super(container);
     
     this.closeButton = this.container.querySelector('.modal__close')!;
     this.contentElement = this.container.querySelector('.modal__content')!;
     
     this.closeButton.addEventListener('click', () => {
-      events.emit('modal:request-close');
+      this.events.emit('modal:request-close');
     });
     
     this.container.addEventListener('click', (event) => {
       if (event.target === this.container) {
-        events.emit('modal:request-close');
-      }
-    });
-    
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') {
-        events.emit('modal:request-close');
+        this.events.emit('modal:request-close');
       }
     });
   }
@@ -45,9 +46,13 @@ export class Modal extends Component<IModal> {
 
   open(): void {
     this.container.classList.add('modal_active');
+    // Навешиваем обработчик при открытии
+    document.addEventListener('keydown', this.handleEscape);
   }
 
   close(): void {
     this.container.classList.remove('modal_active');
+    // Правильно удаляем обработчик при закрытии
+    document.removeEventListener('keydown', this.handleEscape);
   }
 }

@@ -17,7 +17,6 @@ export class CardCatalog extends Card<TCardCatalog> {
         super(container);
         this.actions = actions;
     
-        
         this.imageElement = this.container.querySelector('.card__image')!;
         this.categoryElement = this.container.querySelector('.card__category')!;
         
@@ -28,7 +27,7 @@ export class CardCatalog extends Card<TCardCatalog> {
     }
 
     set image(value: string) {
-        this.imageElement.src = `${CDN_URL}/${value}`;
+        this.setImage(this.imageElement, `${CDN_URL}/${value}`);
     }
 
     set category(value: string) {

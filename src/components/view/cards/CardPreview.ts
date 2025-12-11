@@ -30,7 +30,7 @@ export class CardPreview extends Card<TCardPreview> {
     }
 
     set image(value: string) {
-        this.imageElement.src = `${CDN_URL}/${value}`;
+        this.setImage(this.imageElement, `${CDN_URL}/${value}`);
     }
 
     set category(value: string) {
